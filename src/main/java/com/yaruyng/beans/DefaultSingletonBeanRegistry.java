@@ -1,4 +1,4 @@
-package com.ruby.beans;
+package com.yaruyng.beans;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

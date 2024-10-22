@@ -1,4 +1,4 @@
-package com.ruby.beans;
+package com.yaruyng.beans;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

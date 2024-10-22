@@ -1,8 +1,8 @@
-package com.ruby.context;
+package com.yaruyng.context;
 
-import com.ruby.beans.*;
-import com.ruby.core.ClassPathXmlResource;
-import com.ruby.core.Resource;
+import com.yaruyng.beans.*;
+import com.yaruyng.core.ClassPathXmlResource;
+import com.yaruyng.core.Resource;
 
 public class ClassPathXmlApplicationContext implements BeanFactory ,ApplicationEventPublisher{
 

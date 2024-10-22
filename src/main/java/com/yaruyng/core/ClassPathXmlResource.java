@@ -1,4 +1,4 @@
-package com.ruby.core;
+package com.yaruyng.core;
 
 
 import org.dom4j.Document;

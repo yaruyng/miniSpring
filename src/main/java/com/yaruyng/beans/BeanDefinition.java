@@ -1,4 +1,4 @@
-package com.ruby.beans;
+package com.yaruyng.beans;
 
 public class BeanDefinition {
     String SCOPE_SINGLETON = "singleton";

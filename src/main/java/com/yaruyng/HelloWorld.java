@@ -1,4 +1,4 @@
-package com.ruby;
+package com.yaruyng;
 
 public class HelloWorld {
     public static void main(String[] args) {

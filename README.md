@@ -57,7 +57,6 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-This project helped me to start from a minimalist HttpServer, step by step, until I finished a miniSpring of my own.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -73,7 +72,6 @@ This project helped me to start from a minimalist HttpServer, step by step, unti
 <!-- GETTING STARTED -->
 ## Getting Started
 
-My goal in learning miniSpring is to master Tomcat, so I won't innovate anything on my own, but I will honestly imitate Tomcat and start writing it. Therefore, my directory structure, package names, class names, interface names, inheritance system, and the names of the main methods in the classes are all based on Tomcat itself.
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -122,7 +120,7 @@ Project Link: [https://github.com/yaruyng/miniSpring](https://github.com/yaruyng
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* [郭屹](https://time.geekbang.org/column/intro/100636401?tab=catalog)
+* [郭屹](https://time.geekbang.org/column/intro/100536701?tab=catalog)
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -139,6 +137,6 @@ Project Link: [https://github.com/yaruyng/miniSpring](https://github.com/yaruyng
 [issues-url]: https://github.com//yaruyng/miniSpring/issues
 [license-shield]: https://img.shields.io/github/license/yaruyng/miniSpring.svg?style=for-the-badge
 [license-url]: https://github.com/yaruyng/miniSpring/blob/master/LICENSE.txt
-[product-screenshot]: images/img.png
+[product-screenshot]: images/logo.png
 [Java]: https://img.shields.io/badge/Java-000000?style=for-the-badge&logoColor=white
 [Java-url]: https://www.oracle.com/java/

@@ -1,4 +1,4 @@
-package com.ruby.core;
+package com.yaruyng.core;
 
 import java.util.Iterator;
 

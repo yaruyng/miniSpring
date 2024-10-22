@@ -1,6 +1,6 @@
-package com.ruby.beans;
+package com.yaruyng.beans;
 
-import com.ruby.core.Resource;
+import com.yaruyng.core.Resource;
 import org.dom4j.Element;
 
 import java.util.List;

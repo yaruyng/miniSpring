@@ -1,4 +1,4 @@
-package com.ruby.beans;
+package com.yaruyng.beans;
 
 public interface BeanDefinitionRegistry {
     void registerBeanDefinition(String name,BeanDefinition bd);

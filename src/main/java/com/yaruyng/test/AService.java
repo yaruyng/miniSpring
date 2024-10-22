@@ -1,4 +1,4 @@
-package com.ruby.test;
+package com.yaruyng.test;
 
 public interface AService {
     void sayHello();

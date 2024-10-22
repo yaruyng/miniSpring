@@ -1,8 +1,8 @@
-package com.ruby.test;
+package com.yaruyng.test;
 
-import com.ruby.beans.BeansException;
-import com.ruby.beans.NoSuchBeanDefinitionException;
-import com.ruby.context.ClassPathXmlApplicationContext;
+import com.yaruyng.beans.BeansException;
+import com.yaruyng.beans.NoSuchBeanDefinitionException;
+import com.yaruyng.context.ClassPathXmlApplicationContext;
 
 public class Test1 {
     public static void main(String[] args) throws NoSuchBeanDefinitionException {

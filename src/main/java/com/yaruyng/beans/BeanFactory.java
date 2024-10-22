@@ -1,4 +1,4 @@
-package com.ruby.beans;
+package com.yaruyng.beans;
 
 public interface BeanFactory {
     Object getBean(String beanName) throws BeansException;
