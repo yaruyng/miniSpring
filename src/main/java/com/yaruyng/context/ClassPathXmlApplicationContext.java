@@ -7,13 +7,19 @@ import com.yaruyng.core.Resource;
 public class ClassPathXmlApplicationContext implements BeanFactory ,ApplicationEventPublisher{
 
     SimpleBeanFactory beanFactory;
-
-    public ClassPathXmlApplicationContext(String fileName){
+    public ClassPathXmlApplicationContext(String fileName, boolean isRefresh){
         Resource res = new ClassPathXmlResource(fileName);
         SimpleBeanFactory beanFactory1 = new SimpleBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory1);
         reader.loadBeanDefinitions(res);
         this.beanFactory = beanFactory1;
+        if(isRefresh){
+            this.beanFactory.refresh();
+        }
+    }
+
+    public ClassPathXmlApplicationContext(String fileName){
+        this(fileName,true);
     }
     @Override
     public Object getBean(String beanName) throws BeansException {

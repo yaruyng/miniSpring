@@ -6,6 +6,16 @@ public class AServiceImpl implements AService{
     private String property1;
     private String property2;
 
+    private BaseService ref1;
+
+    public BaseService getRef1() {
+        return ref1;
+    }
+
+    public void setRef1(BaseService bs) {
+        this.ref1 = bs;
+    }
+
     public String getProperty1() {
         return property1;
     }
