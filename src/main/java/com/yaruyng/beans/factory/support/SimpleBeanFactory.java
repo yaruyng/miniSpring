@@ -1,4 +1,10 @@
-package com.yaruyng.beans;
+package com.yaruyng.beans.factory.support;
+
+import com.yaruyng.beans.*;
+import com.yaruyng.beans.factory.BeanFactory;
+import com.yaruyng.beans.factory.config.BeanDefinition;
+import com.yaruyng.beans.factory.config.ConstructorArgumentValue;
+import com.yaruyng.beans.factory.config.ConstructorArgumentValues;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -9,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory,BeanDefinitionRegistry{
-    private Map<String,BeanDefinition> beanDefinitions = new ConcurrentHashMap<>(256);
+public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, BeanDefinitionRegistry {
+    private Map<String, BeanDefinition> beanDefinitions = new ConcurrentHashMap<>(256);
     private List<String> beanDefinitionNames = new ArrayList<>();
     private final Map<String, Object> earlySingletonObjects = new HashMap<>();
     public SimpleBeanFactory(){}
@@ -116,27 +122,27 @@ public class SimpleBeanFactory extends DefaultSingletonBeanRegistry implements B
         try{
             clz = Class.forName(bd.getClassName());
             //handle constructor
-            ArgumentValues argumentValues = bd.getConstructorArgumentValues();
-            if (!argumentValues.isEmpty()) {
-                Class<?>[] paramTypes = new Class<?>[argumentValues.getArgumentCount()];
-                Object[] paramValues = new Object[argumentValues.getArgumentCount()];
-                for (int i = 0; i < argumentValues.getArgumentCount(); i++) {
-                    ArgumentValue indexedArgumentValue = argumentValues.getIndexedArgumentValue(i);
-                    if("String".equals(indexedArgumentValue.getType()) || "Java.lang.String".equals(indexedArgumentValue.getType())){
+            ConstructorArgumentValues constructorArgumentValues = bd.getConstructorArgumentValues();
+            if (!constructorArgumentValues.isEmpty()) {
+                Class<?>[] paramTypes = new Class<?>[constructorArgumentValues.getArgumentCount()];
+                Object[] paramValues = new Object[constructorArgumentValues.getArgumentCount()];
+                for (int i = 0; i < constructorArgumentValues.getArgumentCount(); i++) {
+                    ConstructorArgumentValue indexedConstructorArgumentValue = constructorArgumentValues.getIndexedArgumentValue(i);
+                    if("String".equals(indexedConstructorArgumentValue.getType()) || "Java.lang.String".equals(indexedConstructorArgumentValue.getType())){
                         paramTypes[i] = String.class;
-                        paramValues[i] = indexedArgumentValue.getValue();
+                        paramValues[i] = indexedConstructorArgumentValue.getValue();
                     }
-                    else if ("Integer".equals(indexedArgumentValue.getType()) || "java.lang.Integer".equals(indexedArgumentValue.getType())) {
+                    else if ("Integer".equals(indexedConstructorArgumentValue.getType()) || "java.lang.Integer".equals(indexedConstructorArgumentValue.getType())) {
                         paramTypes[i] = Integer.class;
-                        paramValues[i] = Integer.valueOf((String) indexedArgumentValue.getValue());
+                        paramValues[i] = Integer.valueOf((String) indexedConstructorArgumentValue.getValue());
                     }
-                    else if ("int".equals(indexedArgumentValue.getType())) {
+                    else if ("int".equals(indexedConstructorArgumentValue.getType())) {
                         paramTypes[i] = int.class;
-                        paramValues[i] = Integer.valueOf((String) indexedArgumentValue.getValue()).intValue();
+                        paramValues[i] = Integer.valueOf((String) indexedConstructorArgumentValue.getValue()).intValue();
                     }
                     else {
                         paramTypes[i] = String.class;
-                        paramValues[i] = indexedArgumentValue.getValue();
+                        paramValues[i] = indexedConstructorArgumentValue.getValue();
                     }
                 }
                 try{

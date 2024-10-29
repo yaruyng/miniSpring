@@ -1,15 +1,26 @@
 package com.yaruyng.context;
 
 import com.yaruyng.beans.*;
+import com.yaruyng.beans.factory.BeanFactory;
+import com.yaruyng.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import com.yaruyng.beans.factory.config.AutowireCapableBeanFactory;
+import com.yaruyng.beans.factory.config.BeanFactoryPostProcessor;
+import com.yaruyng.beans.factory.support.SimpleBeanFactory;
+import com.yaruyng.beans.factory.xml.XmlBeanDefinitionReader;
 import com.yaruyng.core.ClassPathXmlResource;
 import com.yaruyng.core.Resource;
 
-public class ClassPathXmlApplicationContext implements BeanFactory ,ApplicationEventPublisher{
+import java.util.ArrayList;
+import java.util.List;
 
-    SimpleBeanFactory beanFactory;
+public class ClassPathXmlApplicationContext implements BeanFactory,ApplicationEventPublisher{
+
+    AutowireCapableBeanFactory beanFactory;
+
+    private final List<BeanFactoryPostProcessor>  beanFactoryPostProcessors = new ArrayList<>();
     public ClassPathXmlApplicationContext(String fileName, boolean isRefresh){
         Resource res = new ClassPathXmlResource(fileName);
-        SimpleBeanFactory beanFactory1 = new SimpleBeanFactory();
+        AutowireCapableBeanFactory beanFactory1 = new AutowireCapableBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory1);
         reader.loadBeanDefinitions(res);
         this.beanFactory = beanFactory1;
@@ -54,4 +65,26 @@ public class ClassPathXmlApplicationContext implements BeanFactory ,ApplicationE
     public void publishEvent(ApplicationEvent event) {
 
     }
+    public List<BeanFactoryPostProcessor> getBeanFactoryPostProcessors() {
+        return this.beanFactoryPostProcessors;
+    }
+
+    public void addBeanFactoryPostProcessor(BeanFactoryPostProcessor postProcessor) {
+        this.beanFactoryPostProcessors.add(postProcessor);
+    }
+    public void refresh() throws BeansException,IllegalStateException{
+        registerBeanPostProcessors(this.beanFactory);
+        onRefresh();
+    }
+
+    private void registerBeanPostProcessors(AutowireCapableBeanFactory bf) {
+        //if (supportAutowire) {
+        bf.addBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor());
+        //}
+    }
+
+    private void onRefresh(){
+        this.beanFactory.refresh();
+    }
+
 }

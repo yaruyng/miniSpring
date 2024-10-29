@@ -1,4 +1,4 @@
-package com.yaruyng.beans;
+package com.yaruyng.beans.factory.config;
 
 public interface SingletonBeanRegistry {
     void registerSingleton(String beanName, Object singletonObject);

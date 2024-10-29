@@ -1,9 +1,11 @@
-package com.yaruyng.beans;
+package com.yaruyng.beans.factory.support;
+
+import com.yaruyng.beans.factory.config.SingletonBeanRegistry;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry{
+public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
     protected List<String> beanNames = new ArrayList<>();
 

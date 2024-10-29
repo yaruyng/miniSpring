@@ -9,7 +9,7 @@
 
     </bean>
     <bean id="baseservice" class="com.yaruyng.test.BaseService">
-        <property type="com.yaruyng.test.BaseBaseService" name="bbs" ref="basebaseservice"/>
+<!--        <property type="com.yaruyng.test.BaseBaseService" name="bbs" ref="basebaseservice"/>-->
     </bean>
     <bean id="basebaseservice" class="com.yaruyng.test.BaseBaseService">
         <property type="com.yaruyng.test.AServiceImpl" name="as" ref="aservice"/>

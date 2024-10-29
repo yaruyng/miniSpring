@@ -1,6 +1,9 @@
 package com.yaruyng.test;
 
+import com.yaruyng.beans.factory.annotation.Autowired;
+
 public class BaseService {
+    @Autowired
     private BaseBaseService bbs;
 
     public BaseBaseService getBbs(){

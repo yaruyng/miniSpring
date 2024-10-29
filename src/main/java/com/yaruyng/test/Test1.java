@@ -1,7 +1,7 @@
 package com.yaruyng.test;
 
 import com.yaruyng.beans.BeansException;
-import com.yaruyng.beans.NoSuchBeanDefinitionException;
+import com.yaruyng.beans.factory.NoSuchBeanDefinitionException;
 import com.yaruyng.context.ClassPathXmlApplicationContext;
 
 public class Test1 {

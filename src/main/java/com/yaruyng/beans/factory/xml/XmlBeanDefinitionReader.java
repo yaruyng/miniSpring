@@ -1,5 +1,11 @@
-package com.yaruyng.beans;
+package com.yaruyng.beans.factory.xml;
 
+import com.yaruyng.beans.*;
+import com.yaruyng.beans.factory.config.BeanDefinition;
+import com.yaruyng.beans.factory.config.ConstructorArgumentValue;
+import com.yaruyng.beans.factory.config.ConstructorArgumentValues;
+import com.yaruyng.beans.factory.support.AbstractBeanFactory;
+import com.yaruyng.beans.factory.support.SimpleBeanFactory;
 import com.yaruyng.core.Resource;
 import org.dom4j.Element;
 
@@ -8,9 +14,9 @@ import java.util.List;
 
 
 public class XmlBeanDefinitionReader {
-    SimpleBeanFactory simpleBeanFactory;
-    public XmlBeanDefinitionReader(SimpleBeanFactory simpleBeanFactory){
-        this.simpleBeanFactory = simpleBeanFactory;
+    AbstractBeanFactory bf;
+    public XmlBeanDefinitionReader(AbstractBeanFactory bf){
+        this.bf = bf;
     }
     public void loadBeanDefinitions(Resource resource){
         while (resource.hasNext()){
@@ -46,16 +52,16 @@ public class XmlBeanDefinitionReader {
 
             //get constructor
             List<Element> constructorElements = element.elements("constructor-arg");
-            ArgumentValues avs = new ArgumentValues();
+            ConstructorArgumentValues avs = new ConstructorArgumentValues();
             for (Element e : constructorElements) {
                 String pType = e.attributeValue("type");
                 String pName = e.attributeValue("name");
                 String pValue = e.attributeValue("value");
-                avs.addArgumentValue(new ArgumentValue(pType,pName,pValue));
+                avs.addArgumentValue(new ConstructorArgumentValue(pType,pName,pValue));
             }
             beanDefinition.setConstructorArgumentValues(avs);
             //end of handle constructor
-            this.simpleBeanFactory.registerBeanDefinition(beanID, beanDefinition);
+            this.bf.registerBeanDefinition(beanID, beanDefinition);
         }
     }
 }
