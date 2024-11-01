@@ -25,7 +25,13 @@ public class ClassPathXmlApplicationContext implements BeanFactory,ApplicationEv
         reader.loadBeanDefinitions(res);
         this.beanFactory = beanFactory1;
         if(isRefresh){
-            this.beanFactory.refresh();
+            try {
+                refresh();
+            } catch (BeansException e) {
+                e.printStackTrace();
+            } catch (IllegalStateException e){
+                e.printStackTrace();
+            }
         }
     }
 
