@@ -1,14 +1,15 @@
 package com.yaruyng.beans.factory.annotation;
 
 import com.yaruyng.beans.BeansException;
-import com.yaruyng.beans.factory.config.AutowireCapableBeanFactory;
+import com.yaruyng.beans.factory.BeanFactory;
+import com.yaruyng.beans.factory.config.AbstractAutowireCapableBeanFactory;
 import com.yaruyng.beans.factory.config.BeanPostProcessor;
 
 import java.lang.reflect.Field;
 
 public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
-    private AutowireCapableBeanFactory beanFactory;
+    private BeanFactory beanFactory;
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         Object result = bean;
@@ -19,7 +20,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
                 boolean isAutowired = field.isAnnotationPresent(Autowired.class);
                 if(isAutowired){
                     String fieldName = field.getName();
-                    Object autowiredObj = this.beanFactory.getBean(fieldName);
+                    Object autowiredObj = this.getBeanFactory().getBean(fieldName);
                     try {
                         field.setAccessible(true);
                         field.set(bean, autowiredObj);
@@ -40,11 +41,13 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
         return null;
     }
 
-    public AutowireCapableBeanFactory getBeanFactory(){
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
+
+    public BeanFactory getBeanFactory(){
         return beanFactory;
     }
 
-    public void setBeanFactory(AutowireCapableBeanFactory beanFactory){
-        this.beanFactory = beanFactory;
-    }
 }

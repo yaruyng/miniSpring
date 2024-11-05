@@ -43,18 +43,46 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
         }
     }
 
-    protected void registerDependentBean(String beanName, String dependentBeanName) {
+    public void registerDependentBean(String beanName, String dependentBeanName) {
+        Set<String> dependentBeans = this.dependentBeanMap.get(beanName);
+        if(dependentBeanName != null && dependentBeanName.contains(dependentBeanName)){
+            return;
+        }
+        synchronized (this.dependentBeanMap){
+            dependentBeans = this.dependentBeanMap.get(beanName);
+            if(dependentBeans == null){
+                dependentBeans = new LinkedHashSet<String>(8);
+                this.dependentBeanMap.put(beanName,dependentBeans);
+            }
+            dependentBeans.add(dependentBeanName);
+        }
+        synchronized (this.dependenciesForBeanMap) {
+            Set<String> dependenciesForBean = this.dependenciesForBeanMap.get(dependentBeanName);
+            if (dependenciesForBean == null) {
+                dependenciesForBean = new LinkedHashSet<String>(8);
+                this.dependenciesForBeanMap.put(dependentBeanName, dependenciesForBean);
+            }
+            dependenciesForBean.add(beanName);
+        }
 
     }
 
     protected boolean hasDependentBean(String beanName) {
         return false;
     }
-    protected String[] getDependentBeans(String beanName) {
-        return null;
+    public String[] getDependentBeans(String beanName) {
+        Set<String> dependentBeans = this.dependentBeanMap.get(beanName);
+        if (dependentBeans == null) {
+            return new String[0];
+        }
+        return (String[]) dependentBeans.toArray();
     }
-    protected String[] getDependenciesForBean(String beanName) {
-        return null;
+    public String[] getDependenciesForBean(String beanName) {
+        Set<String> dependenciesForBean = this.dependenciesForBeanMap.get(beanName);
+        if (dependenciesForBean == null) {
+            return new String[0];
+        }
+        return (String[]) dependenciesForBean.toArray();
     }
 
 }
