@@ -5,7 +5,6 @@ import com.yaruyng.beans.factory.config.BeanDefinition;
 import com.yaruyng.beans.factory.config.ConstructorArgumentValue;
 import com.yaruyng.beans.factory.config.ConstructorArgumentValues;
 import com.yaruyng.beans.factory.support.AbstractBeanFactory;
-import com.yaruyng.beans.factory.support.SimpleBeanFactory;
 import com.yaruyng.core.Resource;
 import org.dom4j.Element;
 
