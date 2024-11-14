@@ -19,4 +19,8 @@ public class BaseService {
         System.out.println("Base service says hello");
         basebaseservice.sayHello();
     }
+
+    public String getHello() {
+        return "Base service says hello";
+    }
 }

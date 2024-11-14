@@ -1,5 +1,8 @@
 package com.yaruyng.web;
 
+import com.yaruyng.beans.BeansException;
+import com.yaruyng.beans.factory.annotation.Autowired;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -7,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -18,6 +22,8 @@ import java.util.Map;
 
 public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
+
+    private WebApplicationContext webApplicationContext;
     private String sContextConfigLocation;
     private List<String> packageNames = new ArrayList<>();
     private Map<String, Object> controllerObjs = new HashMap<>();
@@ -32,6 +38,7 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException{
         super.init(config);
+        this.webApplicationContext = (WebApplicationContext) this.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
         sContextConfigLocation = config.getInitParameter("contextConfigLocation");
         URL xmlPath = null;
 
@@ -70,12 +77,40 @@ public class DispatcherServlet extends HttpServlet {
             try {
                 obj = clz.newInstance();
                 this.controllerObjs.put(controllerName, obj);
+                populateBean(obj,controllerName);
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
+            }catch (BeansException e){
+                e.printStackTrace();
             }
         }
+    }
+
+    protected Object populateBean(Object bean,String beanName) throws BeansException {
+        Object result = bean;
+        Class<?> clazz = bean.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        if(fields!=null) {
+            for (Field field : fields) {
+                boolean isAutowired = field.isAnnotationPresent(Autowired.class);
+                if (isAutowired) {
+                    String fieldName = field.getName();
+                    Object autowiredObj = this.webApplicationContext.getBean(fieldName);
+                    try {
+                        field.setAccessible(true);
+                        field.set(bean, autowiredObj);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
+        return result;
     }
 
     private List<String> scanPackages(List<String> packages){
