@@ -1,4 +1,4 @@
-package com.yaruyng.test1;
+package com.test.controller;
 
 import com.yaruyng.beans.factory.annotation.Autowired;
 import com.yaruyng.test.BaseService;

@@ -14,4 +14,6 @@
     <bean id="basebaseservice" class="com.yaruyng.test.BaseBaseService">
         <property type="com.yaruyng.test.AServiceImpl" name="as" ref="aservice"/>
     </bean>
+    <bean id="webBindingInitializer" class="com.test.DateInitializer">
+    </bean>
 </beans>
