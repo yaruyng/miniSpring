@@ -1,9 +1,10 @@
-package com.yaruyng.web;
+package com.yaruyng.web.bind;
 
 import com.yaruyng.beans.AbstractPropertyAccessor;
 import com.yaruyng.beans.PropertyEditor;
 import com.yaruyng.beans.PropertyValues;
 import com.yaruyng.utils.WebUtils;
+import com.yaruyng.web.BeanWrapperImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;

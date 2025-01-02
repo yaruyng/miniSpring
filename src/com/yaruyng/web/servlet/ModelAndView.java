@@ -1,11 +1,12 @@
 package com.yaruyng.web.servlet;
 
 import javax.swing.text.View;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ModelAndView {
     private Object view;
-    private Map<String, Object> model;
+    private Map<String, Object> model = new HashMap<>();
     public ModelAndView(){}
 
     public ModelAndView(String viewName){
@@ -24,6 +25,13 @@ public class ModelAndView {
     public ModelAndView(String viewName, String modelName, Object modelObject) {
         this.view = viewName;
         addObject(modelName, modelObject);
+    }
+
+    public ModelAndView(View view, Map<String, ?> model) {
+        this.view = view;
+        if (model != null) {
+            addAllAttributes(model);
+        }
     }
 
     public ModelAndView(View view, String modelName, Object modelObject) {

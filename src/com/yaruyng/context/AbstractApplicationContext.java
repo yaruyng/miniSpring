@@ -22,7 +22,11 @@ public abstract class AbstractApplicationContext implements ApplicationContext{
 
     public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
     public Object getBean(String beanName) throws BeansException{
-        return getBeanFactory().getBean(beanName);
+        Object bean = getBeanFactory().getBean(beanName);
+        if(bean instanceof ApplicationContextAware){
+            ((ApplicationContextAware)bean).setApplicationContext(this);
+        }
+        return bean;
     }
 
     public boolean containsBean(String name) {

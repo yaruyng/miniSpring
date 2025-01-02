@@ -1,7 +1,7 @@
 package com.test;
 
-import com.yaruyng.web.WebBindingInitializer;
-import com.yaruyng.web.WebDataBinder;
+import com.yaruyng.web.bind.support.WebBindingInitializer;
+import com.yaruyng.web.bind.WebDataBinder;
 
 import java.util.Date;
 

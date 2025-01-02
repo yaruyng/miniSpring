@@ -1,4 +1,6 @@
-package com.yaruyng.web;
+package com.yaruyng.web.bind.support;
+
+import com.yaruyng.web.bind.WebDataBinder;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -2,7 +2,9 @@ package com.yaruyng.context;
 
 import com.yaruyng.beans.BeansException;
 import com.yaruyng.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import com.yaruyng.beans.factory.config.BeanDefinition;
 import com.yaruyng.beans.factory.config.BeanFactoryPostProcessor;
+import com.yaruyng.beans.factory.config.BeanPostProcessor;
 import com.yaruyng.beans.factory.config.ConfigurableListableBeanFactory;
 import com.yaruyng.beans.factory.support.DefaultListableBeanFactory;
 import com.yaruyng.beans.factory.xml.XmlBeanDefinitionReader;
@@ -40,8 +42,19 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext{
 
     @Override
     public void registerListeners() {
-        ApplicationListener listener = new ApplicationListener();
-        this.getApplicationEventPublisher().addApplicationListener(listener);
+        String[] beanDefinitionNames = this.beanFactory.getBeanDefinitionNames();
+        for (String bdName : beanDefinitionNames) {
+            Object bean = null;
+            try {
+                bean = getBean(bdName);
+            } catch (BeansException e) {
+                e.printStackTrace();
+            }
+            if(bean instanceof ApplicationListener){
+                this.getApplicationEventPublisher().addApplicationListener((ApplicationListener<?>) bean);
+            }
+        }
+
     }
 
     @Override
@@ -52,11 +65,58 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext{
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory bf) {
+        String[] bdNames = this.beanFactory.getBeanDefinitionNames();
+        for (String bdName : bdNames) {
+            BeanDefinition bd = this.beanFactory.getBeanDefinition(bdName);
+            String clzName = bd.getClassName();
+            Class<?> clz = null;
+            try {
+                clz = Class.forName(clzName);
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+            if (BeanFactoryPostProcessor.class.isAssignableFrom(clz)) {
+                try {
+                    this.beanFactoryPostProcessors.add((BeanFactoryPostProcessor) clz.newInstance());
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        for (BeanFactoryPostProcessor processor : this.beanFactoryPostProcessors) {
+            try {
+                processor.postProcessBeanFactory(bf);
+            } catch (BeansException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void registerBeanPostProcessors(ConfigurableListableBeanFactory bf) {
-        this.beanFactory.addBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor());
+        String[] bdNames = this.beanFactory.getBeanDefinitionNames();
+        for (String bdName : bdNames) {
+            BeanDefinition bd = this.beanFactory.getBeanDefinition(bdName);
+            String clzName = bd.getClassName();
+            Class<?> clz = null;
+            try {
+                clz = Class.forName(clzName);
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+            if (BeanPostProcessor.class.isAssignableFrom(clz)) {
+                try {
+                    this.beanFactory.addBeanPostProcessor((BeanPostProcessor) clz.newInstance());
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @Override
@@ -66,7 +126,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext{
 
     @Override
     public void finishRefresh() {
-        publishEvent(new ContextRefeshEvent("Context Refreshed.."));
+        publishEvent(new ContextRefreshedEvent(this));
     }
 
     @Override

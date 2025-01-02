@@ -1,4 +1,6 @@
-package com.yaruyng.web;
+package com.yaruyng.web.context;
+
+import com.yaruyng.web.context.support.XmlWebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

@@ -1,4 +1,4 @@
-package com.yaruyng.web;
+package com.yaruyng.web.context.support;
 
 import com.yaruyng.beans.BeansException;
 import com.yaruyng.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
@@ -7,6 +7,7 @@ import com.yaruyng.beans.factory.config.BeanPostProcessor;
 import com.yaruyng.beans.factory.config.ConfigurableListableBeanFactory;
 import com.yaruyng.beans.factory.support.DefaultListableBeanFactory;
 import com.yaruyng.context.*;
+import com.yaruyng.web.context.WebApplicationContext;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnnotationConfigWebApplicationContext
-extends AbstractApplicationContext implements WebApplicationContext{
+extends AbstractApplicationContext implements WebApplicationContext {
 
     private WebApplicationContext parentApplicationContext;
     private ServletContext servletContext;
@@ -29,11 +30,13 @@ extends AbstractApplicationContext implements WebApplicationContext{
         this.parentApplicationContext = parentApplicationContext;
         this.servletContext = this.parentApplicationContext.getServletContext();
         URL xmlPath = null;
+
         try {
             xmlPath = this.getServletContext().getResource(fileName);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
         List<String> packageNames = XmlScanComponentHelper.getNodeValue(xmlPath);
         List<String> controllerNames = scanPackages(packageNames);
         DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
@@ -111,8 +114,19 @@ extends AbstractApplicationContext implements WebApplicationContext{
 
     @Override
     public void registerListeners() {
-        ApplicationListener listener = new ApplicationListener();
-        this.getApplicationEventPublisher().addApplicationListener(listener);
+        String[] bdNames = this.beanFactory.getBeanDefinitionNames();
+        for (String bdName : bdNames) {
+            Object bean = null;
+            try {
+                bean = getBean(bdName);
+            } catch (BeansException e1) {
+                e1.printStackTrace();
+            }
+
+            if (bean instanceof ApplicationListener) {
+                this.getApplicationEventPublisher().addApplicationListener((ApplicationListener<?>) bean);
+            }
+        }
     }
 
     @Override
@@ -138,7 +152,7 @@ extends AbstractApplicationContext implements WebApplicationContext{
     @Override
     public void finishRefresh() {
         // TODO Auto-generated method stub
-
+        publishEvent(new ContextRefreshedEvent(this));
     }
 
     @Override

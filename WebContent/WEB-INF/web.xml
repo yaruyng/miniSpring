@@ -6,7 +6,7 @@
     </context-param>
     <listener>
         <listener-class>
-            com.yaruyng.web.ContextLoaderListener
+            com.yaruyng.web.context.ContextLoaderListener
         </listener-class>
     </listener>
     <servlet>

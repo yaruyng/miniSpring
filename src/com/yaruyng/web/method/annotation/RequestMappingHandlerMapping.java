@@ -1,27 +1,27 @@
-package com.yaruyng.web.servlet;
+package com.yaruyng.web.method.annotation;
 
 import com.yaruyng.beans.BeansException;
+import com.yaruyng.context.ApplicationContext;
+import com.yaruyng.context.ApplicationContextAware;
 import com.yaruyng.web.RequestMapping;
-import com.yaruyng.web.WebApplicationContext;
+import com.yaruyng.web.context.WebApplicationContext;
+import com.yaruyng.web.servlet.HandlerMapping;
+import com.yaruyng.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
-public class RequestMappingHandlerMapping implements HandlerMapping{
-    WebApplicationContext wac;
-    private final MappingRegistry mappingRegistry = new MappingRegistry();
+public class RequestMappingHandlerMapping implements HandlerMapping, ApplicationContextAware {
+    ApplicationContext applicationContext;
+    private MappingRegistry mappingRegistry = null;
 
-    public RequestMappingHandlerMapping(WebApplicationContext wac){
-        this.wac = wac;
-
-        //TODO: initMapping
-        initMapping();
+    public RequestMappingHandlerMapping(){
     }
 
     protected void initMapping(){
         Class<?> clz = null;
         Object obj = null;
-        String[] controllerNames = this.wac.getBeanDefinitionNames();
+        String[] controllerNames = this.applicationContext.getBeanDefinitionNames();
         for (String controllerName : controllerNames) {
             try {
                 clz = Class.forName(controllerName);
@@ -29,7 +29,7 @@ public class RequestMappingHandlerMapping implements HandlerMapping{
                 e1.printStackTrace();
             }
             try {
-                obj = this.wac.getBean(controllerName);
+                obj = this.applicationContext.getBean(controllerName);
             } catch (BeansException e) {
                 e.printStackTrace();
             }
@@ -51,6 +51,10 @@ public class RequestMappingHandlerMapping implements HandlerMapping{
 
     @Override
     public HandlerMethod getHandler(HttpServletRequest request) throws Exception {
+        if(this.mappingRegistry == null){
+            this.mappingRegistry = new MappingRegistry();
+            initMapping();
+        }
         String sPath = request.getServletPath();
 
         if (!this.mappingRegistry.getUrlMappingNames().contains(sPath)) {
@@ -59,8 +63,15 @@ public class RequestMappingHandlerMapping implements HandlerMapping{
 
         Method method = this.mappingRegistry.getMappingMethods().get(sPath);
         Object obj = this.mappingRegistry.getMappingObjs().get(sPath);
-        HandlerMethod handlerMethod = new HandlerMethod(method, obj);
+        Class<?> clz = this.mappingRegistry.getMappingClasses().get(sPath);
+        String methodName = this.mappingRegistry.getMappingMethodNames().get(sPath);
+        HandlerMethod handlerMethod = new HandlerMethod(method, obj, clz, methodName);
 
         return handlerMethod;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

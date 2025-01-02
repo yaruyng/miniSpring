@@ -2,7 +2,6 @@ package com.yaruyng.beans.factory.annotation;
 
 import com.yaruyng.beans.BeansException;
 import com.yaruyng.beans.factory.BeanFactory;
-import com.yaruyng.beans.factory.config.AbstractAutowireCapableBeanFactory;
 import com.yaruyng.beans.factory.config.BeanPostProcessor;
 
 import java.lang.reflect.Field;
