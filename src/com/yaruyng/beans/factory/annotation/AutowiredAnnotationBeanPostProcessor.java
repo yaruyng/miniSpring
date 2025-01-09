@@ -37,7 +37,8 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        return null;
+        System.out.println("postProcessAfterInitialization : " + beanName);
+        return bean;
     }
 
     @Override

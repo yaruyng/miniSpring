@@ -19,8 +19,7 @@ public class InternalResourceViewResolver implements ViewResolver {
 
     @Override
     public View resolveViewName(String viewName) throws Exception {
-
-        return null;
+        return buildView(viewName);
     }
 
     protected View buildView(String viewName) throws Exception{

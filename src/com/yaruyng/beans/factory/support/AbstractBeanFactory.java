@@ -200,6 +200,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
                     }
                 }
                 try {
+                    //earlyObjects have values set in their construction methods
                     con = clz.getConstructor(paramTypes);
                     obj = con.newInstance(paramValues);
                 } catch (NoSuchMethodException e) {

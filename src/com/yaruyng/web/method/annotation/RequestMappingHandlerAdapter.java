@@ -83,6 +83,7 @@ public class RequestMappingHandlerAdapter implements HandlerAdapter, Application
             i++;
         }
         Method invocableMethod = handlerMethod.getMethod();
+        //xxx .getBean()
         Object returnObj = invocableMethod.invoke(handlerMethod.getBean(), methodParamObjs);
         Class<?> returnType = invocableMethod.getReturnType();
         ModelAndView mav = null;

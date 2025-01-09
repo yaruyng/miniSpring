@@ -75,6 +75,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext{
             } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
             }
+            // determine whether a class is the parent class,interface,or identical class og another class
             if (BeanFactoryPostProcessor.class.isAssignableFrom(clz)) {
                 try {
                     this.beanFactoryPostProcessors.add((BeanFactoryPostProcessor) clz.newInstance());
