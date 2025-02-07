@@ -9,7 +9,7 @@
 
     </bean>
     <bean id="baseservice" class="com.test.service.BaseService">
-        <!--        <property type="com.yaruyng.test.BaseBaseService" name="bbs" ref="basebaseservice"/>-->
+        <!--        <property type="com.yaruyng.test.service.BaseBaseService" name="bbs" ref="basebaseservice"/>-->
     </bean>
     <bean id="basebaseservice" class="com.test.service.BaseBaseService">
         <property type="com.test.service.AServiceImpl" name="as" ref="aservice"/>
@@ -45,4 +45,15 @@
         <property type="String" name="suffix" value=".jsp" />
     </bean>
 
+    <bean id="dataSource" class="com.minis.jdbc.datasource.SingleConnectionDataSource">
+        <property type="String" name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+        <property type="String" name="url" value="jdbc:sqlserver://localhost:1433;databasename=DEMO;"/>
+        <property type="String" name="username" value="sa"/>
+        <property type="String" name="password" value="Sql2016"/>
+    </bean>
+
+
+    <bean id="jdbcTemplate" class="com.minis.jdbc.core.JdbcTemplate" >
+        <property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>
+    </bean>
 </beans>
