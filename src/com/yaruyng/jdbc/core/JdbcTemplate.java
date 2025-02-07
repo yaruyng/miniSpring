@@ -1,10 +1,8 @@
 package com.yaruyng.jdbc.core;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.List;
 
 public class JdbcTemplate {
 
@@ -50,21 +48,10 @@ public class JdbcTemplate {
         try {
             con = dataSource.getConnection();
             pstmt = con.prepareStatement(sql);
-            if (args != null){
-                for (int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof String){
-                        pstmt.setString(i + 1, (String)arg);
-                    }else if (arg instanceof Integer){
-                        pstmt.setInt(i + 1, (int)arg);
-                    }else if (arg instanceof java.util.Date){
-                        pstmt.setDate(i + 1, new java.sql.Date(((java.util.Date)arg).getTime()));
+            ArgumentPreparedStatementSetter preparedStatementSetter = new ArgumentPreparedStatementSetter(args);
+            preparedStatementSetter.setValues(pstmt);
+            return pstmtCallBack.doInPreparedStatement(pstmt);
 
-                    }
-
-                }
-                return pstmtCallBack.doInPreparedStatement(pstmt);
-            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -73,6 +60,27 @@ public class JdbcTemplate {
                 con.close();
             } catch (SQLException e) {
             }
+        }
+    }
+
+    public <T> List<T> query(String sql, Object[] args, RowMapper<T> rowMapper ){
+        RowMapperResultSetExtractor<T> resultSetExtractor = new RowMapperResultSetExtractor<>(rowMapper);
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            con = dataSource.getConnection();
+
+            pstmt = con.prepareStatement(sql);
+            ArgumentPreparedStatementSetter argumentPreparedStatementSetter
+                    = new ArgumentPreparedStatementSetter(args);
+            argumentPreparedStatementSetter.setValues(pstmt);
+            rs = pstmt.executeQuery();
+
+            return resultSetExtractor.extractData(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return null;
     }
