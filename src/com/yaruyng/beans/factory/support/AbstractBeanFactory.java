@@ -4,9 +4,8 @@ import com.yaruyng.beans.BeansException;
 import com.yaruyng.beans.PropertyValue;
 import com.yaruyng.beans.PropertyValues;
 import com.yaruyng.beans.factory.BeanFactory;
-import com.yaruyng.beans.factory.config.BeanDefinition;
-import com.yaruyng.beans.factory.config.ConstructorArgumentValue;
-import com.yaruyng.beans.factory.config.ConstructorArgumentValues;
+import com.yaruyng.beans.factory.FactoryBean;
+import com.yaruyng.beans.factory.config.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory,BeanDefinitionRegistry{
+public abstract class AbstractBeanFactory extends FactoryBeanRegisterSupport implements ConfigurableBeanFactory,BeanDefinitionRegistry{
     protected Map<String, BeanDefinition> beanDefinitionMap=new ConcurrentHashMap<>(256);
     protected List<String> beanDefinitionNames=new ArrayList<>();
     private final Map<String, Object> earlySingletonObjects = new HashMap<String, Object>(16);
@@ -65,8 +64,16 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
             }
 
         }
-        if (singleton == null) {
-            throw new BeansException("bean is null.");
+//        if (singleton == null) {
+//            throw new BeansException("bean is null.");
+//        }
+
+        //process Factory Bean
+        if (singleton instanceof FactoryBean<?>){
+            System.out.println("factory bean -------------- " + beanName + "----------------"+singleton);
+            return this.getObjectForBeanInstance(singleton, beanName);
+        }else {
+            System.out.println("normal bean -------------- " + beanName + "----------------"+singleton);
         }
         return singleton;
     }
@@ -90,6 +97,17 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    protected Object getObjectForBeanInstance(Object beanInstance, String beanName){
+        if(!(beanInstance instanceof FactoryBean<?>)){
+            return beanInstance;
+        }
+
+        Object object = null;
+        FactoryBean<?> factoryBean = (FactoryBean<?>) beanInstance;
+        object = getObjectFromFactoryBean(factoryBean, beanName);
+        return object;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.test.controller;
 
 import com.test.entity.User;
+import com.test.service.IAction;
 import com.yaruyng.beans.factory.annotation.Autowired;
 import com.test.service.BaseService;
 import com.yaruyng.web.RequestMapping;
@@ -56,4 +57,22 @@ public class HelloWorldBean {
         return user;
     }
 
+    @Autowired
+    IAction action;
+
+    @RequestMapping("/testAop")
+    public void doTestAop(HttpServletRequest request, HttpServletResponse response) {
+
+        System.out.println("action -------------- " + action + "----------------");
+
+        action.doAction();
+
+        String str = "test aop, hello world!";
+        try {
+            response.getWriter().write(str);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
