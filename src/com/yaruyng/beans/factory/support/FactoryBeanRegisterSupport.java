@@ -19,6 +19,7 @@ public abstract class FactoryBeanRegisterSupport extends DefaultSingletonBeanReg
         return object;
     }
 
+    //Retrieve the internally contained object from the factory bean
     private Object doGetObjectFromFactoryBean(final FactoryBean<?> factory, final String BeanName){
         Object object = null;
 
