@@ -73,4 +73,10 @@
     <bean id="action" class="com.yaruyng.aop.ProxyFactoryBean" >
         <property type="java.lang.Object" name="target" ref="realaction"/>
     </bean>
+   <bean id="myBeforeAdvice" class="com.test.service.MyBeforeAdvice" />
+   <bean id="realaction" class="com.test.service.Action1" />
+   <bean id="action" class="com.yaruyng.aop.ProxyFactoryBean" >
+      <property type="java.lang.Object" name="target" ref="realaction"/>
+      <property type="String" name="interceptorName" value="myBeforeAdvice"/>
+   </bean>
 </beans>

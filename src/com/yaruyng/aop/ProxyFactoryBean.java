@@ -1,16 +1,18 @@
 package com.yaruyng.aop;
 
+import com.yaruyng.beans.factory.BeanFactory;
 import com.yaruyng.beans.factory.FactoryBean;
 import com.yaruyng.utils.ClassUtils;
 
 public class ProxyFactoryBean implements FactoryBean<Object> {
-
+    private BeanFactory beanFactory;
     private AopProxyFactory aopProxyFactory;
-    private String[] interceptorNames;
+    private String interceptorName;
     private String targetName;
     private Object target;
     private ClassLoader proxyClassLoader = ClassUtils.getDefaultClassLoader();
     private Object singletonInstance;
+    private Advisor advisor;
 
     public ProxyFactoryBean() {
         this.aopProxyFactory = new DefaultAopProxyFactory();
@@ -23,10 +25,10 @@ public class ProxyFactoryBean implements FactoryBean<Object> {
     }
     protected AopProxy createAopProxy() {
         System.out.println("----------createAopProxy for :"+target+"--------");
-        return getAopProxyFactory().createAopProxy(target);
+        return getAopProxyFactory().createAopProxy(target, this.advisor);
     }
-    public void setInterceptorNames(String... interceptorNames) {
-        this.interceptorNames = interceptorNames;
+    public void setInterceptorName(String interceptorName) {
+        this.interceptorName = interceptorName;
     }
 
     public void setTargetName(String targetName) {
@@ -51,8 +53,32 @@ public class ProxyFactoryBean implements FactoryBean<Object> {
         return aopProxy.getProxy();
     }
 
+    private synchronized void initializeAdvisor() {
+        Object advice = null;
+        MethodInterceptor mi = null;
+        try {
+            advice = beanFactory.getBean(interceptorName);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        if (advice instanceof BeforeAdvice) {
+			mi = new MethodBeforeAdviceInterceptor((MethodBeforeAdvice)advice);
+		}
+		else if (advice instanceof AfterAdvice){
+			mi = new AfterReturningAdviceInterceptor((AfterReturningAdvice)advice);
+		}
+		else if (advice instanceof MethodInterceptor) {
+			mi = (MethodInterceptor)advice;
+		}
+		
+		advisor = new DefaultAdvisor();
+		advisor.setMethodInterceptor(mi);
+    }
+
     @Override
     public Object getObject() throws Exception {
+        initializeAdvisor();
         return getSingletonInstance();
     }
 
