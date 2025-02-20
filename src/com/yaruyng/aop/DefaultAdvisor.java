@@ -3,7 +3,7 @@ package com.yaruyng.aop;
 public class DefaultAdvisor implements Advisor{
     private MethodInterceptor methodInterceptor;
 
-    public DefaultAdvisor{
+    public DefaultAdvisor() {
     
     }
     @Override
