@@ -17,5 +17,10 @@ public class DefaultAdvisor implements Advisor{
         // TODO Auto-generated method stub
         this.methodInterceptor = methodInterceptor;
     }
-    
+
+    @Override
+    public Advice getAdvice() {
+        return this.methodInterceptor;
+    }
+
 }

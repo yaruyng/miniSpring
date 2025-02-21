@@ -45,38 +45,30 @@
         <property type="String" name="suffix" value=".jsp" />
     </bean>
 
-<!--    <bean id="dataSource" class="com.yaruyng.jdbc.datasource.SingleConnectionDataSource">-->
-<!--        <property type="String" name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>-->
-<!--        <property type="String" name="url" value="jdbc:sqlserver://localhost:1433;databasename=DEMO;"/>-->
-<!--        <property type="String" name="username" value="sa"/>-->
-<!--        <property type="String" name="password" value="Sql2016"/>-->
+<!--    <bean id="dataSource" class="com.yaruyng.jdbc.pool.PooledDataSource">-->
+<!--        <property name="url" value="jdbc:sqlserver://localhost:1433;databasename=DEMO"/>-->
+<!--        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>-->
+<!--        <property name="username" value="sa"/>-->
+<!--        <property name="password" value="Sql2016"/>-->
+<!--        <property type="int" name="initialSize" value="3"/>-->
 <!--    </bean>-->
 
-    <bean id="dataSource" class="com.yaruyng.jdbc.pool.PooledDataSource">
-        <property name="url" value="jdbc:sqlserver://localhost:1433;databasename=DEMO"/>
-        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
-        <property name="username" value="sa"/>
-        <property name="password" value="Sql2016"/>
-        <property type="int" name="initialSize" value="3"/>
-    </bean>
 
-
-    <bean id="jdbcTemplate" class="com.yaruyng.jdbc.core.JdbcTemplate" >
-        <property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>
-    </bean>
+<!--    <bean id="jdbcTemplate" class="com.yaruyng.jdbc.core.JdbcTemplate" >-->
+<!--        <property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>-->
+<!--    </bean>-->
 
     <bean id="sqlSessionFactory" class="com.yaruyng.batis.DefaultSqlSessionFactory" init-method="init">
         <property type="String" name="mapperLocations" value="mapper"></property>
     </bean>
-
-    <bean id="realaction" class="com.test.service.Action1" />
-    <bean id="action" class="com.yaruyng.aop.ProxyFactoryBean" >
+    <bean id="realaction" class="com.test.service.Action1"/>
+    <bena id="beforeAdvice" class="com.test.service.MyBeforeAdvice"/>
+    <bean id="advisor" class="com.yaruyng.aop.NameMatchMethodPointcutAdvisor">
+        <property type="com.yaruyng.aop.Advice" name="advice" ref="beforeAdvice"/>
+        <property type="String" name="mappedName" value="do*"/>
+    </bean>
+    <bean id="action" class="com.yaruyng.aop.ProxyFactoryBean">
+        <property type="String" name="interceptorName" value="advisor"/>
         <property type="java.lang.Object" name="target" ref="realaction"/>
     </bean>
-   <bean id="myBeforeAdvice" class="com.test.service.MyBeforeAdvice" />
-   <bean id="realaction" class="com.test.service.Action1" />
-   <bean id="action" class="com.yaruyng.aop.ProxyFactoryBean" >
-      <property type="java.lang.Object" name="target" ref="realaction"/>
-      <property type="String" name="interceptorName" value="myBeforeAdvice"/>
-   </bean>
 </beans>

@@ -63,9 +63,20 @@ public class HelloWorldBean {
     @RequestMapping("/testAop")
     public void doTestAop(HttpServletRequest request, HttpServletResponse response) {
 
-        System.out.println("action -------------- " + action + "----------------");
-
         action.doAction();
+
+        String str = "test aop, hello world!";
+        try {
+            response.getWriter().write(str);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping("/testaop2")
+    public void doTestAop2(HttpServletRequest request, HttpServletResponse response) {
+        action.doSomething();
 
         String str = "test aop, hello world!";
         try {
