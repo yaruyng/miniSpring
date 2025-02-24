@@ -53,4 +53,9 @@ public class NameMatchMethodPointcutAdvisor implements PointcutAdvisor{
     public Pointcut getPointcut() {
         return pointcut;
     }
+
+    public void setMappedName(String mappedName) {
+        this.mappedName = mappedName;
+        this.pointcut.setMappedName(this.mappedName);
+    }
 }

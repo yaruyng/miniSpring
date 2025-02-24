@@ -1,10 +1,11 @@
 package com.yaruyng.aop;
 
 import com.yaruyng.beans.factory.BeanFactory;
+import com.yaruyng.beans.factory.BeanFactoryAware;
 import com.yaruyng.beans.factory.FactoryBean;
 import com.yaruyng.utils.ClassUtils;
 
-public class ProxyFactoryBean implements FactoryBean<Object> {
+public class ProxyFactoryBean implements FactoryBean<Object>, BeanFactoryAware {
     private BeanFactory beanFactory;
     private AopProxyFactory aopProxyFactory;
     private String interceptorName;

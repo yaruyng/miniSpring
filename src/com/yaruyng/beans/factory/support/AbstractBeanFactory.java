@@ -3,6 +3,7 @@ package com.yaruyng.beans.factory.support;
 import com.yaruyng.beans.BeansException;
 import com.yaruyng.beans.PropertyValue;
 import com.yaruyng.beans.PropertyValues;
+import com.yaruyng.beans.factory.BeanFactoryAware;
 import com.yaruyng.beans.factory.FactoryBean;
 import com.yaruyng.beans.factory.config.BeanDefinition;
 import com.yaruyng.beans.factory.config.ConfigurableBeanFactory;
@@ -47,7 +48,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegisterSupport imp
                 if(bd != null){
                     singleton=createBean(bd);
                     this.registerBean(beanName, singleton);
-
+                    if(singleton instanceof BeanFactoryAware){
+                        ((BeanFactoryAware) singleton).setBeanFactory(this);
+                    }
                     //beanpostprocessor
                     //step 1 : postProcessBeforeInitialization
                     applyBeanPostProcessorsBeforeInitialization(singleton, beanName);

@@ -14,6 +14,19 @@
     <bean id="basebaseservice" class="com.test.service.BaseBaseService">
         <property type="com.test.service.AServiceImpl" name="as" ref="aservice"/>
     </bean>
+
+    <bean id="realaction" class="com.test.service.Action1"/>
+    <bena id="beforeAdvice" class="com.test.service.MyBeforeAdvice"/>
+    <bean id="advisor" class="com.yaruyng.aop.NameMatchMethodPointcutAdvisor">
+        <property type="com.yaruyng.aop.Advice" name="advice" ref="beforeAdvice"/>
+        <property type="String" name="mappedName" value="do*"/>
+    </bean>
+    <bean id="action" class="com.yaruyng.aop.ProxyFactoryBean">
+        <property type="String" name="interceptorName" value="advisor"/>
+        <property type="java.lang.Object" name="target" ref="realaction"/>
+    </bean>
+
+
     <bean id="contextListener" class="com.test.MyListener" />
 
     <bean id="beanFactoryPostProcessor" class="com.test.MyBeanFactoryPostProcessor" />
@@ -58,17 +71,8 @@
 <!--        <property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>-->
 <!--    </bean>-->
 
-    <bean id="sqlSessionFactory" class="com.yaruyng.batis.DefaultSqlSessionFactory" init-method="init">
-        <property type="String" name="mapperLocations" value="mapper"></property>
-    </bean>
-    <bean id="realaction" class="com.test.service.Action1"/>
-    <bena id="beforeAdvice" class="com.test.service.MyBeforeAdvice"/>
-    <bean id="advisor" class="com.yaruyng.aop.NameMatchMethodPointcutAdvisor">
-        <property type="com.yaruyng.aop.Advice" name="advice" ref="beforeAdvice"/>
-        <property type="String" name="mappedName" value="do*"/>
-    </bean>
-    <bean id="action" class="com.yaruyng.aop.ProxyFactoryBean">
-        <property type="String" name="interceptorName" value="advisor"/>
-        <property type="java.lang.Object" name="target" ref="realaction"/>
-    </bean>
+<!--    <bean id="sqlSessionFactory" class="com.yaruyng.batis.DefaultSqlSessionFactory" init-method="init">-->
+<!--        <property type="String" name="mapperLocations" value="mapper"></property>-->
+<!--    </bean>-->
+
 </beans>
